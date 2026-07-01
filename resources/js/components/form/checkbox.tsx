@@ -4,9 +4,9 @@ import type { Checkbox as CheckboxPrimitive } from "radix-ui"
 import * as React from "react"
 
 import { CheckboxComponent } from "@/components/ui/checkbox";
-import { Field, FieldContent, FieldDescription, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 import { cn, handleFormData } from "@/lib/utils"
 import type { SelectOptions } from "@/types";
+import { Field, FieldContent, FieldDescription, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 
 
 

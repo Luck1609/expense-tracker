@@ -7,6 +7,7 @@ use App\Http\Controllers\InsightController;
 use App\Http\Controllers\LabelController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TransactionController;
+use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
@@ -24,10 +25,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
   Route::get('/insights', [InsightController::class, 'index'])->name('insight.index');
   Route::post('/insights', [InsightController::class, 'store'])->name('insight.store');
 
-  Route::resource('categories', CategoryController::class)->except(['show', 'create', 'edit']);
-  Route::resource('income', IncomeSourceController::class)->except(['show', 'create', 'edit']);
-  Route::resource('transactions', TransactionController::class)->except(['show', 'create', 'edit']);
-  Route::resource('labels', LabelController::class)->except(['show', 'create', 'edit']);
+  Route::resource('categories', CategoryController::class)->except(['show', 'create', 'edit'])
+    ->middleware(HandlePrecognitiveRequests::class);
+  
+  Route::resource('income', IncomeSourceController::class)->except(['show', 'create', 'edit'])
+    ->middleware(HandlePrecognitiveRequests::class);
+  
+  Route::resource('transactions', TransactionController::class)->except(['show', 'create', 'edit'])
+    ->middleware(HandlePrecognitiveRequests::class);
+  
+  Route::resource('labels', LabelController::class)->except(['show', 'create', 'edit'])
+    ->middleware(HandlePrecognitiveRequests::class);
 });
 
 require __DIR__ . '/settings.php';

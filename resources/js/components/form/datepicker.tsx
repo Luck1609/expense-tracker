@@ -4,6 +4,7 @@ import type { UseHttpPrecognitiveProps } from "node_modules/@inertiajs/react/typ
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
+import { cn, handleFormData } from "@/lib/utils"
 import { Calendar } from "@/components/ui/calendar"
 import { Field, FieldLabel } from "@/components/ui/field"
 import {
@@ -11,7 +12,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { cn, handleFormData } from "@/lib/utils"
 
 
 type Props<T extends object> = Omit<React.ComponentProps<"input">, 'form'> & {
@@ -33,8 +33,9 @@ type Props<T extends object> = Omit<React.ComponentProps<"input">, 'form'> & {
 export function DatePicker<T extends object>({ name, placeholder, label, classNames, form }: Props<T>) {
   const [open, setOpen] = React.useState(false)
 
-  if (!form)
+  if (!form) {
     throw new Error("DatePicker component requires inertia useForm hook")
+  }
 
   const { value, handleChange: handleFormChange, error: formError, validate, touch, invalid } = handleFormData(name, form) || {}
   const error = formError

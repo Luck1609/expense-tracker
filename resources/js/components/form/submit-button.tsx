@@ -3,9 +3,9 @@ import type { VariantProps } from 'class-variance-authority'
 import type { UseHttpPrecognitiveProps } from 'node_modules/@inertiajs/react/types/useHttp'
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
-import Loader from '../loader'
 import { Button } from '../ui/button'
 import type { buttonVariants } from '../ui/button'
+import { Spinner } from '../ui/spinner'
 
 type Props<T extends object> = {
   label?: ReactNode;
@@ -23,7 +23,7 @@ export default function SubmitButton<T extends object>({ form, label = "Submit",
       className={cn("flex items-center", props?.className)}
       {...props}
     >
-      {form.processing && <Loader />}
+      {form.processing && <Spinner />}
       {label}
     </Button>
   )

@@ -3,10 +3,10 @@ import type { UseHttpPrecognitiveProps } from 'node_modules/@inertiajs/react/typ
 import type { RadioGroup as RadioGroupPrimitive } from "radix-ui"
 import * as React from "react"
 
+import { cn, handleFormData } from "@/lib/utils";
+import type { SelectOptions } from "@/types";
 import { Field, FieldContent, FieldDescription, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 import { RadioGroupComponent, RadioGroupItem } from '@/components/ui/radio-group';
-import { cn, handleFormData } from "@/lib/utils"
-import type { SelectOptions } from "@/types";
 
 
 type Props<T extends object> = Omit<React.ComponentProps<typeof RadioGroupPrimitive.Root>, 'form'> & {
