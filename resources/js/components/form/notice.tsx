@@ -1,3 +1,4 @@
+import { Spinner } from "@/components/ui/spinner"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,7 +9,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import Loader from "../loader";
 
 
 type Props = {
@@ -61,7 +61,7 @@ export function Notice({ title, description, open, toggler, type, classNames, ..
               onClick={(props as { action: () => void }).action}
               disabled={props.isLoading}
               >
-                {props.isLoading && <Loader />}
+                {props.isLoading && <Spinner />}
                 {props.isLoading ? 'Submitting...' : 'Continue'}
               </AlertDialogAction>
             )
