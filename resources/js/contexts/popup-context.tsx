@@ -31,18 +31,20 @@ export type PopupModalConfig = {
   }
 }
 
-export type PopupContextConfig = {
-  title?: string;
-  description?: string;
-} & ({
+export type PopupNoticeConfig = {
   type: 'notice';
   onConfirm: () => void;
   confirmText?: string;
   cancelText?: string;
   classNames?: PopupClassNames;
-} | PopupModalConfig | {
+}
+
+export type PopupContextConfig = {
+  title?: string;
+  description?: string;
+} & (PopupNoticeConfig | PopupModalConfig | {
   type: 'alert';
-  classNames?: PopupClassNames
+  classNames?: PopupClassNames;
 })
 
 

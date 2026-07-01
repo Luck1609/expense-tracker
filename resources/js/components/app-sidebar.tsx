@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { LayoutGrid, Plus, Wallet, Tags, HandCoins } from 'lucide-react';
+import { LayoutGrid, Plus, Wallet, Tags, HandCoins, ChartNoAxesCombined, Sparkles } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -49,12 +49,12 @@ const mainNavItems: NavItem[] = [
   {
     title: 'AI Insight',
     href: insight.index(),
-    icon: LayoutGrid,
+    icon: Sparkles,
   },
   {
     title: 'Report',
     href: report.index(),
-    icon: LayoutGrid,
+    icon: ChartNoAxesCombined,
   },
 ];
 

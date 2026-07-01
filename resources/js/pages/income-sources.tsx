@@ -1,9 +1,12 @@
 import { useForm, router, usePage } from "@inertiajs/react";
 import { Plus, BriefcaseBusiness } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import type { PopupContextConfig} from "@/contexts/popup-context";
+import { usePopup } from "@/contexts/popup-context";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/form/input";
 import { Textarea } from "@/components/form/textarea";
+import income from "@/routes/income";
 
 interface IncomeSource {
   id: string;
@@ -13,30 +16,17 @@ interface IncomeSource {
 
 
 
-function SourceForm({ source, onClose }: { source?: IncomeSource | null; onClose: () => void }) {
+function SourceForm({ data }: { data?: IncomeSource }) {
   const form = useForm({
-    name: source?.name || "",
-    description: source?.description || "",
-  });
+    name: data?.name || "",
+    description: data?.description || "",
+  }).withPrecognition(data ? income.update(data.id) : income.store());
+  const { hide } = usePopup()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // if (source) {
-    //   put(`/income-sources/${source.id}`, {
-    //     onSuccess: () => {
-    //       onClose();
-    //       reset();
-    //     },
-    //   });
-    // } else {
-    //   post('/income-sources', {
-    //     onSuccess: () => {
-    //       onClose();
-    //       reset();
-    //     },
-    //   });
-    // }
+    form.submit()
   };
 
   return (
@@ -46,7 +36,7 @@ function SourceForm({ source, onClose }: { source?: IncomeSource | null; onClose
       <Textarea name="description" form={form} label="" placeholder="" />
 
       <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+        <Button type="button" variant="outline" onClick={hide}>Cancel</Button>
         <Button type="submit" disabled={form.processing}>Save</Button>
       </div>
     </form>
@@ -55,7 +45,7 @@ function SourceForm({ source, onClose }: { source?: IncomeSource | null; onClose
 
 export default function IncomeSources() {
   const { incomeSources } = usePage<{ incomeSources: IncomeSource[] }>().props;
-  // const { toast } = useToast();
+  const { show } = usePopup();
 
   const handleDelete = (id: string) => {
     if (confirm("Delete?")) {
@@ -65,10 +55,24 @@ export default function IncomeSources() {
     }
   };
 
-  // const handleEdit = (source: IncomeSource) => {
-  //   setEditingSrc(source);
-  //   setDialogOpen(true);
-  // };
+  const handleAction = (action: "submit" | "delete", source?: IncomeSource) => {
+
+    const options = {
+      submit: {
+        type: "modal",
+        title: source ? "Edit Income Source" : "Add Income Source",
+        description: source ? "Edit existing income source" : "Add new income source",
+        content: <SourceForm data={source} />
+      } as PopupContextConfig,
+      delete: {
+        type: "notice",
+        title: "Delete Income Source",
+        description: "Are you sure you want to delete this income source?",
+      } as PopupContextConfig,
+    }
+
+    show(options[action])
+  }
 
   return (
     <div className="space-y-6">
@@ -78,7 +82,10 @@ export default function IncomeSources() {
           <p className="text-muted-foreground mt-1">Manage where your money comes from.</p>
         </div>
 
-        <Button><Plus className="w-4 h-4 mr-2" /> Add Source</Button>
+        <Button onClick={() => handleAction("submit")}>
+          <Plus className="w-4 h-4" /> 
+          Add Source
+        </Button>
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -87,8 +94,8 @@ export default function IncomeSources() {
             No income sources found. Add your salary or side hustle to start tracking.
           </div>
         ) : (
-          incomeSources.map(s => (
-            <Card key={s.id} className="group hover:shadow-md transition-all duration-200">
+          incomeSources.map((source) => (
+            <Card key={source.id} className="group hover:shadow-md transition-all duration-200">
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-3">
@@ -96,14 +103,14 @@ export default function IncomeSources() {
                       <BriefcaseBusiness className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg">{s.name}</h3>
-                      {s.description && <p className="text-sm text-muted-foreground mt-0.5">{s.description}</p>}
+                      <h3 className="font-semibold text-lg">{source.name}</h3>
+                      {source.description && <p className="text-sm text-muted-foreground mt-0.5">{source.description}</p>}
                     </div>
                   </div>
                 </div>
                 <div className="mt-4 pt-4 border-t flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button variant="ghost" size="sm" onClick={() => { setEditingSrc(s); setDialogOpen(true); }}>Edit</Button>
-                  <Button variant="ghost" size="sm" className="text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={() => handleDelete(s.id)}>Delete</Button>
+                  <Button variant="ghost" size="sm" onClick={() => handleAction("submit", source)}>Edit</Button>
+                  <Button variant="ghost" size="sm" className="text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={() => handleDelete(source.id)}>Delete</Button>
                 </div>
               </CardContent>
             </Card>
